@@ -1,11 +1,61 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".JumpingShooter">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@drawable/fondoprincipal">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="60dp">
+    <TableRow android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+        <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/boton"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:text="@string/jugar"
+        android:id="@+id/button2" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/boton"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:text="@string/ayuda"
+            android:id="@+id/button1" />
+    </TableRow>
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <TableRow android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp">
+        <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAllCaps="false"
+        android:background="@drawable/boton"
+        android:textSize="20sp"
+        android:text="@string/configuracion"
+        android:id="@+id/button3"
+        android:layout_gravity="center_vertical" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:background="@drawable/boton"
+            android:textSize="20sp"
+            android:text="@string/puntuaciones"
+            android:id="@+id/button4"
+            android:layout_gravity="center_vertical" /></TableRow>
 
-</RelativeLayout>
+
+      </TableLayout>
+</LinearLayout>

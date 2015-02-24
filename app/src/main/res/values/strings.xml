@@ -2,7 +2,10 @@
 <resources>
 
     <string name="app_name">JumpingShooter</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="jugar">Jugar</string>
+    <string name="puntuaciones">Puntuaciones</string>
+    <string name="ayuda">Ayuda</string>
+    <string name="configuracion">Configuracion</string>
     <string name="action_settings">Settings</string>
 
 </resources>
