@@ -1,9 +1,9 @@
 package org.jumpingshooter.juegos.feralva.jumpingshooter;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 
 
 public class JumpingShooter extends ActionBarActivity {
@@ -13,6 +13,9 @@ public class JumpingShooter extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jumping_shooter);
     }
-
+    public void lanzarJuego(View view) {
+        Intent i = new Intent(this, Juego.class);
+        startActivity(i);
+    }
 
 }
