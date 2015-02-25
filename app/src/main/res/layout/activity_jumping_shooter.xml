@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:background="@drawable/fondoprincipal">
+
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,21 +18,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/boton"
+        android:background="@drawable/buttonstate"
         android:onClick="lanzarJuego"
         android:textAllCaps="false"
         android:textSize="20sp"
+        android:textColor="#ff000000"
         android:text="@string/jugar"
-        android:id="@+id/button2" />
+        android:id="@+id/buttonjugar" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/boton"
+            android:background="@drawable/buttonstate"
             android:textAllCaps="false"
             android:textSize="20sp"
+            android:textColor="#ff000000"
             android:text="@string/ayuda"
-            android:id="@+id/button1" />
+            android:id="@+id/buttonayuda" />
     </TableRow>
 
     <TableRow android:paddingLeft="20dp"
@@ -41,21 +45,24 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textAllCaps="false"
-        android:background="@drawable/boton"
+        android:background="@drawable/buttonstate"
         android:textSize="20sp"
+            android:textColor="#ff000000"
         android:text="@string/configuracion"
-        android:id="@+id/button3"
+        android:id="@+id/buttonconfiguracion"
         android:layout_gravity="center_vertical" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:background="@drawable/boton"
+            android:background="@drawable/buttonstate"
             android:textSize="20sp"
+            android:textColor="#ff000000"
             android:text="@string/puntuaciones"
-            android:id="@+id/button4"
-            android:layout_gravity="center_vertical" /></TableRow>
+            android:id="@+id/buttonpuntuaciones"
+            android:layout_gravity="center_vertical" />
+        </TableRow>
 
 
       </TableLayout>
