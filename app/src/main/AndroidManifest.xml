@@ -22,9 +22,11 @@
         <activity
             android:name=".Juego"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
 
-        </activity>
+         />
+
+
     </application>
 
 </manifest>
