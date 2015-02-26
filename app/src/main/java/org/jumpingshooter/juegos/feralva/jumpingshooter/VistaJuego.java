@@ -9,10 +9,18 @@ import android.view.View;
 import java.util.Vector;
 
 public class VistaJuego extends View {
-    // //// ASTEROIDES //////
-    private Vector<Grafico> Rocas; // Vector con los Rocas
+    ////// ROCA //////
+    private Vector<Grafico> Rocas; // Vector con los Rocas del juego
+    ////// MONIGOTE //////
     private Grafico monigote;
-    private int numRocas = 10; //Numero inicial de rocas
+
+    // Thread encargado de procesar el juego
+    private ThreadJuego thread = new ThreadJuego();
+    // Cada cuanto queremos procesar cambios (ms)
+    private static int PERIODO_PROCESO = 50;
+    // Cuando se realizó el último proceso
+    private long ultimoProceso = 0;
+
 
     public VistaJuego(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -25,6 +33,7 @@ public class VistaJuego extends View {
         Rocas = new Vector<Grafico>();
 
         Grafico roca = new Grafico(this, drawableRoca);
+        roca.setIncX(roca.MAX_VELOCIDAD);
         Rocas.add(roca);
 
 
@@ -43,10 +52,13 @@ public class VistaJuego extends View {
             roca.setPosX((ancho - roca.getAncho()));
             roca.setPosY(alto - (roca.getAlto() * 1.2));
         }
+        ultimoProceso = System.currentTimeMillis();
+        thread.start();
+
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         monigote.dibujaGrafico(canvas);
         for (Grafico roca : Rocas) {
@@ -54,4 +66,30 @@ public class VistaJuego extends View {
 
         }
     }
+
+    synchronized protected void actualizaFisica() {
+        long ahora = System.currentTimeMillis();
+        /*Si el tiempo que ha pasado es menor que el Periodo Proceso no hace nada*/
+        if (ultimoProceso + PERIODO_PROCESO > ahora) {
+            return;
+        }
+        // Para una ejecución en tiempo real calculamos retardo
+        double retardo = (ahora - ultimoProceso) / PERIODO_PROCESO;
+        ultimoProceso = ahora; // Para la próxima vez
+        if (!Rocas.isEmpty()) {
+            for (Grafico roca : Rocas) {
+                roca.incrementaPos(retardo);
+            }
+        }
+    }
+
+    class ThreadJuego extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                actualizaFisica();
+            }
+        }
+    }
+
 }
