@@ -37,7 +37,7 @@ class Grafico {
     public void incrementaPos(double factor){
         posX+=incX * factor;
         // Si salimos de la pantalla, corregimos posición
-        if(posX<-ancho/2) {posX=view.getWidth()-ancho/2;}
+        if(posX<-ancho/2) {}
         if(posX>view.getWidth()-ancho/2) {posX=-ancho/2;}
         posY+=incY * factor;
         if(posY<-alto/2) {posY=view.getHeight()-alto/2;}

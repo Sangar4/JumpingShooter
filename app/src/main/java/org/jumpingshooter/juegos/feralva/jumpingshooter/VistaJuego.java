@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.Vector;
 
@@ -77,8 +78,12 @@ public class VistaJuego extends View {
         double retardo = (ahora - ultimoProceso) / PERIODO_PROCESO;
         ultimoProceso = ahora; // Para la próxima vez
         if (!Rocas.isEmpty()) {
-            for (Grafico roca : Rocas) {
+            for (int e=0;e<Rocas.capacity();e++) {
+               Grafico roca= Rocas.get(e);
                 roca.incrementaPos(retardo);
+                if(roca.getPosX()<roca.getAncho()/2) {
+                   Rocas.remove(e);
+                }
             }
         }
     }
@@ -91,5 +96,6 @@ public class VistaJuego extends View {
             }
         }
     }
+
 
 }
