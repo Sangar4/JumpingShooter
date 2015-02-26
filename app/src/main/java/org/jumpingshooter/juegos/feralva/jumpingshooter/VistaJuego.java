@@ -78,13 +78,15 @@ public class VistaJuego extends View {
         double retardo = (ahora - ultimoProceso) / PERIODO_PROCESO;
         ultimoProceso = ahora; // Para la próxima vez
         if (!Rocas.isEmpty()) {
-            for (int e=0;e<Rocas.capacity();e++) {
-               Grafico roca= Rocas.get(e);
+            for (Grafico roca : Rocas) {
                 roca.incrementaPos(retardo);
-                if(roca.getPosX()<roca.getAncho()/2) {
-                   Rocas.remove(e);
-                }
             }
+            for (int e = 0; e < Rocas.size(); e++)
+                if ( Rocas.get(e).getPosX()< Rocas.get(e).getAncho()/2) {
+                    DestruyeRocas(e);
+                    break;
+                }
+
         }
     }
 
@@ -97,5 +99,7 @@ public class VistaJuego extends View {
         }
     }
 
-
+    private void DestruyeRocas(int i) {
+        Rocas.remove(i);
+    }
 }
