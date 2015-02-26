@@ -33,7 +33,7 @@ public class VistaJuego extends View {
         Rocas = new Vector<Grafico>();
 
         Grafico roca = new Grafico(this, drawableRoca);
-        roca.setIncX(roca.MAX_VELOCIDAD);
+        roca.setIncX(-0.5*roca.MAX_VELOCIDAD);
         Rocas.add(roca);
 
 
