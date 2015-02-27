@@ -7,13 +7,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.Vector;
 
 public class VistaJuego extends View {
     ////// ROCA //////
     private Grafico roca;
     private boolean rocaActivo = false;
-    private int tiempoRoca;
+
+    ////// ROCA2 //////
+    private Grafico roca2;
+    private boolean roca2Activo = false;
 
     ////// MONIGOTE //////
     private Grafico monigote;
@@ -32,13 +34,13 @@ public class VistaJuego extends View {
 
     public VistaJuego(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Drawable drawableRoca, drawableMonigote, drawableMisil;
+        Drawable drawableRoca, drawableMonigote;
         drawableMonigote = context.getResources().getDrawable(R.drawable.monigoteapp);
         drawableRoca = context.getResources().getDrawable(R.drawable.roca);
 
         monigote = new Grafico(this, drawableMonigote);
         roca = new Grafico(this, drawableRoca);
-//        roca = new Grafico(this, drawableRoca);
+       roca2 = new Grafico(this, drawableRoca);
 
     }
 
@@ -62,6 +64,9 @@ public class VistaJuego extends View {
         if(rocaActivo) {
     roca.dibujaGrafico(canvas);
         }
+        if(roca2Activo) {
+            roca2.dibujaGrafico(canvas);
+        }
     }
 
     synchronized protected void actualizaFisica() {
@@ -70,8 +75,13 @@ public class VistaJuego extends View {
         if (ultimoProceso + PERIODO_PROCESO > ahora) {
             return;
         }
-        if((Math.random()*10)<0.1 && (rocaActivo == false)){ //Falta la otra condicion de que la roca no este activa
+        if ((Math.random() * 10) < 0.1 && (rocaActivo == false)) { //Falta la otra condicion de que la si la otra roca esta activa la posicion se al menos de 1/4 de la pantalla para que de tiempo a subir y bajr
             ActivaRoca();
+
+
+        }
+        if ((Math.random() * 10) < 0.1 && (roca2Activo == false)) { //Falta la otra condicion de que la roca no este activa
+            ActivaRoca2();
 
 
         }
@@ -81,29 +91,37 @@ public class VistaJuego extends View {
         // Actualizamos posición de misil
         if (rocaActivo) {
             roca.incrementaPos(retardo);
-            if (roca.getPosX()<=0) {
+            if (roca.getPosX() <= 0) {
                 rocaActivo = false;
                 //   if (tiempoRoca < 0) {            tiempoRoca -= retardo;
 
             }
+            if (roca2Activo) {
+                roca2.incrementaPos(retardo);
+                if (roca2.getPosX() <= 0) {
+                    roca2Activo = false;
+                    //   if (tiempoRoca < 0) {            tiempoRoca -= retardo;
 
-                        }
-        if(monigoteActivo) {
-            monigote.incrementaPos(retardo);
-            if (monigote.getPosY() < (getHeight() - (monigote.getAlto() * 2.2))) {
-                monigoteActivo = false;
-                ActivaDescenso();
+                }
 
             }
+            if (monigoteActivo) {
+                monigote.incrementaPos(retardo);
+                if (monigote.getPosY() < (getHeight() - (monigote.getAlto() * 2.2))) {
+                    monigoteActivo = false;
+                    ActivaDescenso();
+
+                }
+            }
+            if (descensoActivo) {
+                monigote.incrementaPos(retardo);
+                if (monigote.getPosY() > (getHeight() - (monigote.getAlto() * 1.2))) {
+                    descensoActivo = false;
+                }
+            } //   if (tiempoRoca < 0) {            tiempoRoca -= retardo;
+
+
         }
-        if(descensoActivo) {
-            monigote.incrementaPos(retardo);
-            if (monigote.getPosY() > (getHeight() - (monigote.getAlto() * 1.2))) {
-                descensoActivo = false;
-            }
-        } //   if (tiempoRoca < 0) {            tiempoRoca -= retardo;
-
-
     }
 
     class ThreadJuego extends Thread {
@@ -145,15 +163,23 @@ public class VistaJuego extends View {
 
     private void ActivaRoca() {
 
-    roca.setIncX(-0.5*roca.MAX_VELOCIDAD);
+    roca.setIncX(-0.5*roca.MAX_DESPLAZAMIENTO);
          roca.setPosX((getWidth() - roca.getAncho()));
          roca.setPosY(getHeight() - (roca.getAlto() * 1.2));
         rocaActivo = true;
     }
 
+    private void ActivaRoca2() {
+
+        roca2.setIncX(-0.5*roca.MAX_DESPLAZAMIENTO);
+        roca2.setPosX((getWidth() - roca.getAncho()));
+        roca2.setPosY(getHeight() - (roca.getAlto() * 1.2));
+        roca2Activo = true;
+    }
+
     private void ActivaSalto() {
 
-        monigote.setIncY(-0.5*monigote.MAX_VELOCIDAD);
+        monigote.setIncY(-0.5*monigote.MAX_DESPLAZAMIENTO);
         monigote.setPosX((monigote.getAncho()) / 2);
         monigote.setPosY(getHeight() - (monigote.getAlto() * 1.2));
         monigoteActivo = true;

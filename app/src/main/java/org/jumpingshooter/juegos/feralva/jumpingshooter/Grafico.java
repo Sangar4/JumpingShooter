@@ -14,6 +14,7 @@ class Grafico {
     private View view;
     // Para determinar el espacio a borrar (view.ivalidate)
     public static final int MAX_VELOCIDAD = 20;
+    public static final int MAX_DESPLAZAMIENTO = 50; // PAra que las rocas se muevan mas rapido
 
     public Grafico(View view, Drawable drawable){
         this.view = view;
