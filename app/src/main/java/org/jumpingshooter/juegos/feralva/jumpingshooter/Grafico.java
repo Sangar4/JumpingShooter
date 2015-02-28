@@ -10,6 +10,7 @@ class Grafico {
     private double incX, incY;   //Velocidad desplazamiento
     private int ancho, alto;     //Dimensiones de la imagen
     private int radioColision;   //Para determinar colisión
+    private boolean activo; //Determina si el objeto está activo
     //Donde dibujamos el gráfico (usada en view.ivalidate)
     private View view;
     // Para determinar el espacio a borrar (view.ivalidate)
@@ -38,7 +39,7 @@ class Grafico {
     public void incrementaPos(double factor){
         posX+=incX * factor;
         // Si salimos de la pantalla, corregimos posición
-        if(posX<-ancho/2) {}
+        if(/*posX<-ancho/2*/false) {posX=view.getWidth()-ancho/2;}
         if(posX>view.getWidth()-ancho/2) {posX=-ancho/2;}
         posY+=incY * factor;
         if(posY<-alto/2) {posY=view.getHeight()-alto/2;}
@@ -129,5 +130,13 @@ class Grafico {
 
     public boolean verificaColision(Grafico g) {
         return(distancia(g) < (radioColision+g.radioColision));
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

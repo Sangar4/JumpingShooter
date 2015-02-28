@@ -6,23 +6,17 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
+import java.util.Vector;
 
 public class VistaJuego extends View {
     ////// ROCA //////
-    private Grafico roca;
-    private boolean rocaActivo = false;
-
-    ////// ROCA2 //////
-    private Grafico roca2;
-    private boolean roca2Activo = false;
-
+    private Vector<Grafico> Rocas; // Vector con los Rocas del juego
+    private Grafico Roca;
     ////// MONIGOTE //////
     private Grafico monigote;
-    private boolean monigoteActivo = false;
-    private boolean descensoActivo = false;
-
-
+    private boolean salto=false;
 
     // Thread encargado de procesar el juego
     private ThreadJuego thread = new ThreadJuego();
@@ -34,13 +28,19 @@ public class VistaJuego extends View {
 
     public VistaJuego(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Drawable drawableRoca, drawableMonigote;
+        Drawable drawableRoca, drawableMonigote, drawableMisil;
         drawableMonigote = context.getResources().getDrawable(R.drawable.monigoteapp);
         drawableRoca = context.getResources().getDrawable(R.drawable.roca);
 
         monigote = new Grafico(this, drawableMonigote);
-        roca = new Grafico(this, drawableRoca);
-       roca2 = new Grafico(this, drawableRoca);
+        Roca= new Grafico(this, drawableRoca);
+        Roca.setIncX(-0.8*Roca.MAX_VELOCIDAD);
+        Rocas = new Vector<Grafico>();
+
+        Grafico roca = new Grafico(this, drawableRoca);
+        roca.setIncX(-0.8*roca.MAX_VELOCIDAD);
+        Rocas.add(roca);
+
 
     }
 
@@ -52,6 +52,14 @@ public class VistaJuego extends View {
         monigote.setPosX((monigote.getAncho()) / 2);
         monigote.setPosY(alto - (monigote.getAlto() * 1.2));
 
+        Roca.setPosX((ancho - Roca.getAncho()));
+        Roca.setPosY(alto - (Roca.getAlto() * 1.2));
+
+        for (Grafico roca : Rocas) {
+
+            roca.setPosX((ancho - roca.getAncho()));
+            roca.setPosY(alto - (roca.getAlto() * 1.2));
+        }
         ultimoProceso = System.currentTimeMillis();
         thread.start();
 
@@ -61,11 +69,9 @@ public class VistaJuego extends View {
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         monigote.dibujaGrafico(canvas);
-        if(rocaActivo) {
-    roca.dibujaGrafico(canvas);
-        }
-        if(roca2Activo) {
-            roca2.dibujaGrafico(canvas);
+        for (Grafico roca : Rocas) {
+            roca.dibujaGrafico(canvas);
+
         }
     }
 
@@ -75,53 +81,50 @@ public class VistaJuego extends View {
         if (ultimoProceso + PERIODO_PROCESO > ahora) {
             return;
         }
-        if ((Math.random() * 10) < 0.1 && (rocaActivo == false)) { //Falta la otra condicion de que la si la otra roca esta activa la posicion se al menos de 1/4 de la pantalla para que de tiempo a subir y bajr
-            ActivaRoca();
-
-
-        }
-        if ((Math.random() * 10) < 0.1 && (roca2Activo == false)) { //Falta la otra condicion de que la roca no este activa
-            ActivaRoca2();
-
-
-        }
+        /*if(!Rocas.isEmpty() && Math.random()<0.1 && Rocas.capacity()!=Rocas.size()) {
+            Rocas.setElementAt(Roca ,Rocas.size()-1);
+        }*/
         // Para una ejecución en tiempo real calculamos retardo
         double retardo = (ahora - ultimoProceso) / PERIODO_PROCESO;
         ultimoProceso = ahora; // Para la próxima vez
-        // Actualizamos posición de misil
-        if (rocaActivo) {
-            roca.incrementaPos(retardo);
-            if (roca.getPosX() <= 0) {
-                rocaActivo = false;
-                //   if (tiempoRoca < 0) {            tiempoRoca -= retardo;
-
+        if(salto){
+            monigote.incrementaPos(retardo);
+            if(monigote.getPosY()<(getHeight() - (monigote.getAlto() * 2.7))) {
+                salto= false;
+                descenso();
             }
-            if (roca2Activo) {
-                roca2.incrementaPos(retardo);
-                if (roca2.getPosX() <= 0) {
-                    roca2Activo = false;
-                    //   if (tiempoRoca < 0) {            tiempoRoca -= retardo;
-
-                }
-
-            }
-            if (monigoteActivo) {
-                monigote.incrementaPos(retardo);
-                if (monigote.getPosY() < (getHeight() - (monigote.getAlto() * 2.2))) {
-                    monigoteActivo = false;
-                    ActivaDescenso();
-
-                }
-            }
-            if (descensoActivo) {
-                monigote.incrementaPos(retardo);
-                if (monigote.getPosY() > (getHeight() - (monigote.getAlto() * 1.2))) {
-                    descensoActivo = false;
-                }
-            } //   if (tiempoRoca < 0) {            tiempoRoca -= retardo;
-
+          if(monigote.getPosY() > (getHeight() - (monigote.getAlto() * 1.2))){
+              salto=false;
+          }
 
         }
+        if (!Rocas.isEmpty()) {
+            for (int e=0;e<Rocas.size();e++) {
+               Grafico roca= Rocas.get(e);
+                roca.incrementaPos(retardo);
+                if(roca.getPosX()+roca.getAncho()/2<0) {
+                   Rocas.remove(e);
+                    Rocas.add(Roca);
+                }
+            }
+        }
+    }
+    public boolean onTouchEvent (MotionEvent event) {
+        super.onTouchEvent(event);
+        float x = event.getX();
+        float y = event.getY();
+        switch (event.getAction()) {
+
+            case MotionEvent.ACTION_UP:{
+                if(!salto) {
+                    saltar();
+                    salto = true;
+                }
+                break;
+                }
+        }
+        return true;
+
     }
 
     class ThreadJuego extends Thread {
@@ -132,63 +135,14 @@ public class VistaJuego extends View {
             }
         }
     }
-
-    private float mX=0, mY=0;
-    private boolean disparo=false;
-
-    @Override
-    public boolean onTouchEvent (MotionEvent event) {
-        super.onTouchEvent(event);
-        float x = event.getX();
-        float y = event.getY();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                disparo=true;
-                break;
-
-            case MotionEvent.ACTION_UP:
-
-                if (disparo && (monigoteActivo==false) && (descensoActivo == false)){ // Los False ahi son para que si salta y vuleve a pulsar no se Raye
-                    ActivaSalto();
-                }
-                break;
-        }
-        mX=x; mY=y;
-        return true;
+    private void saltar(){
+        monigote.setIncY(-40);
+        salto=true;
+    }
+    private void descenso(){
+        monigote.setIncY(8);
+        monigote.setPosY(getHeight() - (monigote.getAlto() * 2.7)-1);
+        salto=true;
     }
 
-
-
-
-
-    private void ActivaRoca() {
-
-    roca.setIncX(-0.5*roca.MAX_DESPLAZAMIENTO);
-         roca.setPosX((getWidth() - roca.getAncho()));
-         roca.setPosY(getHeight() - (roca.getAlto() * 1.2));
-        rocaActivo = true;
-    }
-
-    private void ActivaRoca2() {
-
-        roca2.setIncX(-0.5*roca.MAX_DESPLAZAMIENTO);
-        roca2.setPosX((getWidth() - roca.getAncho()));
-        roca2.setPosY(getHeight() - (roca.getAlto() * 1.2));
-        roca2Activo = true;
-    }
-
-    private void ActivaSalto() {
-
-        monigote.setIncY(-0.5*monigote.MAX_DESPLAZAMIENTO);
-        monigote.setPosX((monigote.getAncho()) / 2);
-        monigote.setPosY(getHeight() - (monigote.getAlto() * 1.2));
-        monigoteActivo = true;
-    }
-    private void ActivaDescenso() {
-
-        monigote.setIncY(0.5*monigote.MAX_VELOCIDAD);
-        monigote.setPosX((monigote.getAncho()) / 2);
-        monigote.setPosY(getHeight() - (monigote.getAlto() * 2.2));
-        descensoActivo = true ;
-    }
 }
