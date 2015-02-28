@@ -10,7 +10,6 @@ class Grafico {
     private double incX, incY;   //Velocidad desplazamiento
     private int ancho, alto;     //Dimensiones de la imagen
     private int radioColision;   //Para determinar colisión
-    private boolean activo; //Determina si el objeto está activo
     //Donde dibujamos el gráfico (usada en view.ivalidate)
     private View view;
     // Para determinar el espacio a borrar (view.ivalidate)
@@ -132,11 +131,5 @@ class Grafico {
         return(distancia(g) < (radioColision+g.radioColision));
     }
 
-    public boolean isActivo() {
-        return activo;
-    }
 
-    public void setActivo(boolean activo) {
-        this.activo = activo;
-    }
 }
