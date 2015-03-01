@@ -31,16 +31,43 @@ public class VistaJuego extends View {
 
     public VistaJuego(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Drawable drawableRoca, drawableMonigote, drawableMisil;
+        Drawable drawableRoca, drawableMonigote, drawableZombie, drawableZombie2, drawableZombie3, drawableZombie4;
         drawableMonigote = context.getResources().getDrawable(R.drawable.monigoteapp);
         drawableRoca = context.getResources().getDrawable(R.drawable.roca);
+        drawableZombie = context.getResources().getDrawable(R.drawable.zombiecubo);
+        drawableZombie2 = context.getResources().getDrawable(R.drawable.zombirugby);
+        //drawableZombie3 = context.getResources().getDrawable(R.drawable.zombimega);
+        drawableZombie4 = context.getResources().getDrawable(R.drawable.zombienazi);
         monigote = new Grafico(this, drawableMonigote);
         Rocas = new Vector<Grafico>(8);
         //Añadimos 8 objetos roca al vector
         for (int i=0 ; i<8 ; i++) {
-            Grafico  roca = new Grafico(this,drawableRoca );
-            roca.setIncX(-0.8 * roca.MAX_VELOCIDAD);
-            Rocas.add(roca);
+            if(i<=3) {
+                Grafico roca = new Grafico(this, drawableRoca);
+                roca.setIncX(-0.8 * roca.MAX_VELOCIDAD);
+                Rocas.add(roca);
+            }
+            if(i==4) {
+                Grafico zombie = new Grafico(this, drawableZombie);
+                zombie.setIncX(-0.8 * zombie.MAX_VELOCIDAD);
+                Rocas.add(zombie);
+            }
+            if(i==5){
+                Grafico zombie2 = new Grafico(this, drawableZombie2);
+                zombie2.setIncX(-0.8 * zombie2.MAX_VELOCIDAD);
+                Rocas.add(zombie2);
+            }
+            if(i==6) {
+                Grafico zombie3 = new Grafico(this, drawableZombie2);
+                zombie3.setIncX(-0.8 * zombie3.MAX_VELOCIDAD);
+                Rocas.add(zombie3);
+            }
+            if(i==7) {
+                Grafico zombie4 = new Grafico(this, drawableZombie4);
+                zombie4.setIncX(-0.8 * zombie4.MAX_VELOCIDAD);
+                Rocas.add(zombie4);
+            }
+
         }
 
     }
@@ -51,12 +78,18 @@ public class VistaJuego extends View {
         // Una vez que conocemos nuestro ancho y alto.
         monigote.setPosX((monigote.getAncho()) / 2);
         monigote.setPosY(alto - (monigote.getAlto() * 1.2));
-
+        int i = 0;
         //Establecemos el ancho y alto de todas las rocas del vector
         for (Grafico roca : Rocas) {
 
             roca.setPosX(ancho - roca.getAncho());
-            roca.setPosY(alto - (roca.getAlto() * 1.2));
+            if(i<=3) {
+                roca.setPosY(alto - (roca.getAlto() * 1.2));
+            }
+            else{
+                roca.setPosY(alto - (roca.getAlto() * 1));
+            }
+            i++;
         }
         ultimoProceso = System.currentTimeMillis();
         thread.start();
@@ -98,7 +131,7 @@ public class VistaJuego extends View {
         // o hacia abajo dependiendo de la posición donde se encuentre
         if(salto){
             monigote.incrementaPos(retardo);
-            if(monigote.getPosY()<(getHeight() - (monigote.getAlto() * 2.7))) {
+            if(monigote.getPosY()<(getHeight() - (monigote.getAlto() * 3.2))) {
                 salto= false;
                 //Cuando llegamos a la posición máxima llamamos al metodo descenso
                 descenso();
@@ -164,6 +197,11 @@ public class VistaJuego extends View {
             }
             count++;
 
+            for (int i = 0; i < Rocas.size(); i++)
+                if (monigote.verificaColision(Rocas.elementAt(i))) {
+                    AcabaJuego();
+                    break;
+                }
         }
     }
     public boolean onTouchEvent (MotionEvent event) {
@@ -214,5 +252,10 @@ public class VistaJuego extends View {
         rocasactivas[i]=false;
         Rocas.get(i).setPosX(getWidth() - Rocas.get(i).getAncho());
         Rocas.get(i).setPosY(getHeight() - Rocas.get(i).getAlto()*1.2);
+    }
+
+    private void AcabaJuego(){
+        ((Juego)getContext()).finish();
+
     }
 }
