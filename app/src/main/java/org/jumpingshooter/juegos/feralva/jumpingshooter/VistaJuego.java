@@ -131,7 +131,7 @@ public class VistaJuego extends View {
         // o hacia abajo dependiendo de la posición donde se encuentre
         if(salto){
             monigote.incrementaPos(retardo);
-            if(monigote.getPosY()<(getHeight() - (monigote.getAlto() * 3.2))) {
+            if(monigote.getPosY()<(getHeight() - (monigote.getAlto() * 2.7))) {
                 salto= false;
                 //Cuando llegamos a la posición máxima llamamos al metodo descenso
                 descenso();
