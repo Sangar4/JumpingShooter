@@ -43,7 +43,7 @@ class Grafico {
         posY+=incY * factor;
         if(posY<-alto/2) {posY=view.getHeight()-alto/2;}
         if(posY>view.getHeight()-alto/2) {posY=-alto/2;}
-       // angulo += rotacion * factor; //Actualizamos ángulo
+        // angulo += rotacion * factor; //Actualizamos ángulo
     }
 
     public Drawable getDrawable() {
@@ -129,6 +129,16 @@ class Grafico {
 
     public boolean verificaColision(Grafico g) {
         return(distancia(g) < (radioColision+g.radioColision));
+    }
+
+        /*  Esta la he creado nueva porque la otra tenia en cuenta la Y tambien y por lo tanto no se cumplia nuca  */
+
+    public double distancia2(Grafico g) {
+        return Math.hypot(posX-g.posX*1.4, 0);
+    }
+    /*  Esta la he creado nueva porque la otra tenia en cuenta la Y tambien y por lo tanto no se cumplia nuca  */
+    public boolean verificaDisparo(Grafico g) {
+        return(distancia2(g) < (radioColision+g.radioColision));
     }
 
 

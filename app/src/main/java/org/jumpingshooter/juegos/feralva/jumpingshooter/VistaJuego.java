@@ -15,8 +15,10 @@ public class VistaJuego extends View {
     private Vector<Grafico> Rocas; // Vector con los Rocas del juego
     ////// MONIGOTE //////
     private Grafico monigote;
+    private Grafico misil;
     // variable booleana que permite saber si el monigote está saltando
     private boolean salto=false;
+    private  boolean misilActivo = false;
     // Thread encargado de procesar el juego
     private ThreadJuego thread = new ThreadJuego();
     // Cada cuanto queremos procesar cambios (ms)
@@ -31,7 +33,8 @@ public class VistaJuego extends View {
 
     public VistaJuego(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Drawable drawableRoca, drawableMonigote, drawableZombie, drawableZombie2, drawableZombie3, drawableZombie4;
+        Drawable drawableRoca, drawableMonigote, drawableZombie, drawableZombie2, drawableZombie3, drawableZombie4, drawableMisil;
+        drawableMisil =  context.getResources().getDrawable(R.drawable.misil);//Falta cambiarlo para que sea la balaa
         drawableMonigote = context.getResources().getDrawable(R.drawable.monigoteapp);
         drawableRoca = context.getResources().getDrawable(R.drawable.roca);
         drawableZombie = context.getResources().getDrawable(R.drawable.zombiecubo);
@@ -39,6 +42,7 @@ public class VistaJuego extends View {
         //drawableZombie3 = context.getResources().getDrawable(R.drawable.zombimega);
         drawableZombie4 = context.getResources().getDrawable(R.drawable.zombienazi);
         monigote = new Grafico(this, drawableMonigote);
+        misil = new Grafico(this, drawableMisil);
         Rocas = new Vector<Grafico>(8);
         //Añadimos 8 objetos roca al vector
         for (int i=0 ; i<8 ; i++) {
@@ -111,6 +115,9 @@ public class VistaJuego extends View {
            }
             count++;
         }
+        if (misilActivo) {
+            misil.dibujaGrafico(canvas);
+        }
     }
 
     synchronized protected void actualizaFisica() {
@@ -130,18 +137,39 @@ public class VistaJuego extends View {
         //Si la variable salto está activa significa que el monigote ha de moverse ya sea hacia arriba
         // o hacia abajo dependiendo de la posición donde se encuentre
         if(salto){
-            monigote.incrementaPos(retardo);
-            if(monigote.getPosY()<(getHeight() - (monigote.getAlto() * 2.7))) {
-                salto= false;
-                //Cuando llegamos a la posición máxima llamamos al metodo descenso
-                descenso();
-            }
+                monigote.incrementaPos(retardo);
+                if(monigote.getPosY()<(getHeight() - (monigote.getAlto() * 2.7))) {
+                    salto= false;
+                    //Cuando llegamos a la posición máxima llamamos al metodo descenso
+                    descenso();
+                }
           if(monigote.getPosY() > (getHeight() - (monigote.getAlto() * 1.2))){
               // Al llegar a la posición inicial después de saltar decimos que el salto es false
               salto=false;
           }
 
+
+
+
         }
+
+          if(misilActivo) {
+             misil.incrementaPos(retardo);
+          if (misil.getPosX() > (getWidth() - (monigote.getAlto() * 2.7))) {
+                misilActivo = false;
+         }
+
+              else{
+              for (int i = 4; i < Rocas.size(); i++)
+                  if (misil.verificaDisparo(Rocas.elementAt(i))) {
+                      DesactivaRoca(i);
+                      misilActivo = false;
+
+                      break;
+                  }
+          }
+         }
+
         //En este for haremos el movimiento de cada roca
         for (Grafico roca : Rocas) {
             //La distancia mínima entre rocas debe de ser 5.5 veces el ancho de la roca para que el
@@ -203,6 +231,8 @@ public class VistaJuego extends View {
                     break;
                 }
         }
+
+
     }
     public boolean onTouchEvent (MotionEvent event) {
         super.onTouchEvent(event);
@@ -211,10 +241,17 @@ public class VistaJuego extends View {
         switch (event.getAction()) {
             /*Al pulsar la pantalla activamos el proceso salto*/
             case MotionEvent.ACTION_UP:{
-                if(!salto ) {
+                if(!salto  && !misilActivo) {
+                if(x < getWidth()/2){
                     saltar();
                     salto = true;
                 }
+                if(x>getWidth()/2){
+                    disparar();
+                    misilActivo = true;
+                }
+
+             }
                 break;
                 }
         }
@@ -230,6 +267,16 @@ public class VistaJuego extends View {
             }
         }
     }
+
+    // metodo saltar activa la condición de disparo
+    private void disparar(){
+        misil.setIncX(40); // VELOCIDAD DE LA BALA
+        misil.setPosX(1.5*(monigote.getAncho()));
+        misil.setPosY(getHeight() - (monigote.getAlto()/1.5));
+        misilActivo =true;
+    }
+
+
     // metodo saltar activa la condición de salto y la velocidad del monigote para ir hacia arriba
     private void saltar(){
         monigote.setIncY(-40);
