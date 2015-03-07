@@ -17,5 +17,8 @@ public class JumpingShooter extends ActionBarActivity {
         Intent i = new Intent(this, Juego.class);
         startActivity(i);
     }
-
+    public void lanzarAyuda(View view) {
+        Intent i = new Intent(this, Ayuda.class);
+        startActivity(i);
+    }
 }

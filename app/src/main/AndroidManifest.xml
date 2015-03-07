@@ -25,7 +25,11 @@
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
 
          />
-
+        <activity
+            android:name=".Ayuda"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            />
 
     </application>
 

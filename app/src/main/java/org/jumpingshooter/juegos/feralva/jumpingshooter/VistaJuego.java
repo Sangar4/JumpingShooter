@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.Vector;
-
 public class VistaJuego extends View {
     ////// ROCA //////
     private Vector<Grafico> Rocas; // Vector con los Rocas del juego
@@ -17,8 +16,8 @@ public class VistaJuego extends View {
     private Grafico monigote;
     private Grafico misil;
     // variable booleana que permite saber si el monigote está saltando
-    private boolean salto=false;
-    private  boolean misilActivo = false;
+    private boolean salto = false;
+    private boolean misilActivo = false;
     // Thread encargado de procesar el juego
     private ThreadJuego thread = new ThreadJuego();
     // Cada cuanto queremos procesar cambios (ms)
@@ -34,39 +33,39 @@ public class VistaJuego extends View {
     public VistaJuego(Context context, AttributeSet attrs) {
         super(context, attrs);
         Drawable drawableRoca, drawableMonigote, drawableZombie, drawableZombie2, drawableZombie3, drawableZombie4, drawableMisil;
-        drawableMisil =  context.getResources().getDrawable(R.drawable.misil);//Falta cambiarlo para que sea la balaa
+        drawableMisil = context.getResources().getDrawable(R.drawable.misil);//Falta cambiarlo para que sea la balaa
         drawableMonigote = context.getResources().getDrawable(R.drawable.monigoteapp);
         drawableRoca = context.getResources().getDrawable(R.drawable.roca);
         drawableZombie = context.getResources().getDrawable(R.drawable.zombiecubo);
         drawableZombie2 = context.getResources().getDrawable(R.drawable.zombirugby);
-        //drawableZombie3 = context.getResources().getDrawable(R.drawable.zombimega);
+        drawableZombie3 = context.getResources().getDrawable(R.drawable.zombimega);
         drawableZombie4 = context.getResources().getDrawable(R.drawable.zombienazi);
         monigote = new Grafico(this, drawableMonigote);
         misil = new Grafico(this, drawableMisil);
         Rocas = new Vector<Grafico>(8);
         //Añadimos 8 objetos roca al vector
-        for (int i=0 ; i<8 ; i++) {
-            if(i<=3) {
+        for (int i = 0; i < 8; i++) {
+            if (i <= 3) {
                 Grafico roca = new Grafico(this, drawableRoca);
                 roca.setIncX(-0.8 * roca.MAX_VELOCIDAD);
                 Rocas.add(roca);
             }
-            if(i==4) {
+            if (i == 4) {
                 Grafico zombie = new Grafico(this, drawableZombie);
                 zombie.setIncX(-0.8 * zombie.MAX_VELOCIDAD);
                 Rocas.add(zombie);
             }
-            if(i==5){
+            if (i == 5) {
                 Grafico zombie2 = new Grafico(this, drawableZombie2);
                 zombie2.setIncX(-0.8 * zombie2.MAX_VELOCIDAD);
                 Rocas.add(zombie2);
             }
-            if(i==6) {
-                Grafico zombie3 = new Grafico(this, drawableZombie2);
+            if (i == 6) {
+                Grafico zombie3 = new Grafico(this, drawableZombie3);
                 zombie3.setIncX(-0.8 * zombie3.MAX_VELOCIDAD);
                 Rocas.add(zombie3);
             }
-            if(i==7) {
+            if (i == 7) {
                 Grafico zombie4 = new Grafico(this, drawableZombie4);
                 zombie4.setIncX(-0.8 * zombie4.MAX_VELOCIDAD);
                 Rocas.add(zombie4);
@@ -87,10 +86,9 @@ public class VistaJuego extends View {
         for (Grafico roca : Rocas) {
 
             roca.setPosX(ancho - roca.getAncho());
-            if(i<=3) {
+            if (i <= 3) {
                 roca.setPosY(alto - (roca.getAlto() * 1.2));
-            }
-            else{
+            } else {
                 roca.setPosY(alto - (roca.getAlto() * 1));
             }
             i++;
@@ -106,13 +104,13 @@ public class VistaJuego extends View {
         monigote.dibujaGrafico(canvas);
         //Variable que sirve como indice del vector de rocas para saber que roca estamos en
         // el for y asociarla con si flag del vector de rocasactivas
-        int count=0;
+        int count = 0;
         //Dibujamos las rocas que tengan su flag de activo.
         for (Grafico roca : Rocas) {
 
-            if(rocasactivas[count]) {
+            if (rocasactivas[count]) {
                 roca.dibujaGrafico(canvas);
-           }
+            }
             count++;
         }
         if (misilActivo) {
@@ -123,9 +121,9 @@ public class VistaJuego extends View {
     synchronized protected void actualizaFisica() {
         //Variable que sirve como indice del vector de rocas para saber que roca estamos en
         // el for y asociarla con si flag del vector de rocasactivas
-        int count=0;
+        int count = 0;
         //Variable que nos dice si se cumple las condiciones necesarias para dibujar una nueva roca
-        boolean flag=true;
+        boolean flag = true;
         long ahora = System.currentTimeMillis();
         /*Si el tiempo que ha pasado es menor que el Periodo Proceso no hace nada*/
         if (ultimoProceso + PERIODO_PROCESO > ahora) {
@@ -136,39 +134,35 @@ public class VistaJuego extends View {
         ultimoProceso = ahora; // Para la próxima vez
         //Si la variable salto está activa significa que el monigote ha de moverse ya sea hacia arriba
         // o hacia abajo dependiendo de la posición donde se encuentre
-        if(salto){
-                monigote.incrementaPos(retardo);
-                if(monigote.getPosY()<(getHeight() - (monigote.getAlto() * 2.7))) {
-                    salto= false;
-                    //Cuando llegamos a la posición máxima llamamos al metodo descenso
-                    descenso();
-                }
-          if(monigote.getPosY() > (getHeight() - (monigote.getAlto() * 1.2))){
-              // Al llegar a la posición inicial después de saltar decimos que el salto es false
-              salto=false;
-          }
-
-
+        if (salto) {
+            monigote.incrementaPos(retardo);
+            if (monigote.getPosY() < (getHeight() - (monigote.getAlto() * 2.7))) {
+                salto = false;
+                //Cuando llegamos a la posición máxima llamamos al metodo descenso
+                descenso();
+            }
+            if (monigote.getPosY() > (getHeight() - (monigote.getAlto() * 1.2))) {
+                // Al llegar a la posición inicial después de saltar decimos que el salto es false
+                salto = false;
+            }
 
 
         }
 
-          if(misilActivo) {
-             misil.incrementaPos(retardo);
-          if (misil.getPosX() > (getWidth() - (monigote.getAlto() * 2.7))) {
+        if (misilActivo) {
+            misil.incrementaPos(retardo);
+            if (misil.getPosX() > (getWidth() - (monigote.getAlto()))) {
                 misilActivo = false;
-         }
+            } else {
+                for (int i = 4; i < Rocas.size(); i++)
+                    if (misil.verificaDisparo(Rocas.elementAt(i))) {
+                        DesactivaRoca(i);
+                        misilActivo = false;
 
-              else{
-              for (int i = 4; i < Rocas.size(); i++)
-                  if (misil.verificaDisparo(Rocas.elementAt(i))) {
-                      DesactivaRoca(i);
-                      misilActivo = false;
-
-                      break;
-                  }
-          }
-         }
+                        break;
+                    }
+            }
+        }
 
         //En este for haremos el movimiento de cada roca
         for (Grafico roca : Rocas) {
@@ -176,41 +170,41 @@ public class VistaJuego extends View {
             //monigote pueda subir y bajar.
             distancia_minima = getWidth() - 5.5 * roca.getAncho();
             //Si la roca llega al final se desactiva.
-            if(roca.getPosX()+roca.getAncho()/2<0) {
+            if (roca.getPosX() + roca.getAncho() / 2 < 0) {
                 DesactivaRoca(count);
 
             }
             //Si la roca no ha sido desactivada debe actualizarse su posicion
-            if(rocasactivas[count]){
+            if (rocasactivas[count]) {
                 roca.incrementaPos(retardo);
             }
             //Suponemos en principio que la roca se puede dibujar y hemos de comprobar si se cumplen
             //todas las condiciones
-            flag=true;
+            flag = true;
           /*En primer lugar para dibujar una roca esta ha de estar desactivada, y hacemos que esto
           lo calcule cada tiempo aleatorio
           */
-            if(!rocasactivas[count] && Math.random()<0.017) {
+            if (!rocasactivas[count] && Math.random() < 0.017) {
                 //Si entramos aquí suponemos que tya se puede dibujar la roca y la activamos
                 rocasactivas[count] = true;
                 /*Pero hemos de comprobar que el resto de rocas activas no estén cerca de ahi dos
                 bucles for para excluir la roca que acabamos de activar para dibujar
                 */
-                for (int e = 0; e<count ; e++) {
+                for (int e = 0; e < count; e++) {
                     double posx = (int) Rocas.get(e).getPosX();
                     /*Si la posicion de las otras rocas es menor a la distancia minima no podremos
                     dibujar la roca
                     */
-                    if ( (posx > distancia_minima) && rocasactivas[e]) {
+                    if ((posx > distancia_minima) && rocasactivas[e]) {
                         flag = false;
                         rocasactivas[count] = false;
                     }
                 }
                 //idem for anterior
-                for (int e = count+1; e<Rocas.capacity() ; e++) {
+                for (int e = count + 1; e < Rocas.capacity(); e++) {
                     double posx = (int) Rocas.get(e).getPosX();
 
-                    if ( (posx > distancia_minima) && rocasactivas[e]) {
+                    if ((posx > distancia_minima) && rocasactivas[e]) {
                         flag = false;
                         rocasactivas[count] = false;
                     }
@@ -218,7 +212,7 @@ public class VistaJuego extends View {
                 /*Al final del proceso si flag está a true esq se cumplirarn todas las condiciones
                  * para poder dibujar la roca
                 */
-                if(flag){
+                if (flag) {
                     rocasactivas[count] = true;
                 }
 
@@ -234,26 +228,27 @@ public class VistaJuego extends View {
 
 
     }
-    public boolean onTouchEvent (MotionEvent event) {
+
+    public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
         float x = event.getX();
         float y = event.getY();
         switch (event.getAction()) {
             /*Al pulsar la pantalla activamos el proceso salto*/
-            case MotionEvent.ACTION_UP:{
-                if(!salto  && !misilActivo) {
-                if(x < getWidth()/2){
-                    saltar();
-                    salto = true;
-                }
-                if(x>getWidth()/2){
-                    disparar();
-                    misilActivo = true;
-                }
+            case MotionEvent.ACTION_UP: {
+                if (!salto && !misilActivo) {
+                    if (x < getWidth() / 2) {
+                        saltar();
+                        salto = true;
+                    }
+                    if (x > getWidth() / 2) {
+                        disparar();
+                        misilActivo = true;
+                    }
 
-             }
-                break;
                 }
+                break;
+            }
         }
         return true;
 
@@ -269,40 +264,49 @@ public class VistaJuego extends View {
     }
 
     // metodo saltar activa la condición de disparo
-    private void disparar(){
+    private void disparar() {
         misil.setIncX(40); // VELOCIDAD DE LA BALA
-        misil.setPosX(1.5*(monigote.getAncho()));
-        misil.setPosY(getHeight() - (monigote.getAlto()/1.5));
-        misilActivo =true;
+        misil.setPosX(1.5 * (monigote.getAncho()));
+        misil.setPosY(getHeight() - (monigote.getAlto() / 1.5));
+        misilActivo = true;
     }
 
 
     // metodo saltar activa la condición de salto y la velocidad del monigote para ir hacia arriba
-    private void saltar(){
+    private void saltar() {
         monigote.setIncY(-40);
-        salto=true;
+        salto = true;
     }
+
     /* el metodo descenso es activado una vez el monigote ha llegado a la maxima altura en su salto
     * entonces la velocidad del monigote se pone para ir hacia abajo y se situa un punto mas a bajo
     * de la posición máxima
     */
-    private void descenso(){
+    private void descenso() {
         monigote.setIncY(15);
-        monigote.setPosY(getHeight() - (monigote.getAlto() * 2.7)-1);
-        salto=true;
+        monigote.setPosY(getHeight() - (monigote.getAlto() * 2.7) - 1);
+        salto = true;
     }
+
     /*El metodo desactiva roca es llamado cuando una roca sale de pantalla y lo que hace es desactivar
     * el flag correspondiente a esa roca y situar la roca desactivada en la posición inical para que
     * esté preparada para cuando sea activada
     */
-    private void DesactivaRoca(int i){
-        rocasactivas[i]=false;
+    private void DesactivaRoca(int i) {
+
+        rocasactivas[i] = false;
         Rocas.get(i).setPosX(getWidth() - Rocas.get(i).getAncho());
-        Rocas.get(i).setPosY(getHeight() - Rocas.get(i).getAlto()*1.2);
+        if(i>=4){
+            Rocas.get(i).setPosY(getHeight() - Rocas.get(i).getAlto() * 1);
+        }
+        else {
+            Rocas.get(i).setPosY(getHeight() - Rocas.get(i).getAlto() * 1.2);
+        }
+
     }
 
-    private void AcabaJuego(){
-        ((Juego)getContext()).finish();
+    private void AcabaJuego() {
+        ((Juego) getContext()).finish();
 
     }
 }
