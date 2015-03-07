@@ -51,6 +51,7 @@
         android:textColor="#ff000000"
         android:text="@string/configuracion"
         android:id="@+id/buttonconfiguracion"
+        android:onClick="lanzarPreferencias"
         android:layout_gravity="center_vertical" />
         <Button
             android:layout_width="match_parent"

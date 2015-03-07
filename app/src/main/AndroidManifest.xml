@@ -30,6 +30,11 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             />
+        <activity
+            android:name=".Preferencias"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            />
 
     </application>
 

@@ -1,6 +1,7 @@
 package org.jumpingshooter.juegos.feralva.jumpingshooter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -18,6 +19,7 @@ public class VistaJuego extends View {
     // variable booleana que permite saber si el monigote está saltando
     private boolean salto = false;
     private boolean misilActivo = false;
+    private int valor = 3;
     // Thread encargado de procesar el juego
     private ThreadJuego thread = new ThreadJuego();
     // Cada cuanto queremos procesar cambios (ms)
@@ -40,6 +42,29 @@ public class VistaJuego extends View {
         drawableZombie2 = context.getResources().getDrawable(R.drawable.zombirugby);
         drawableZombie3 = context.getResources().getDrawable(R.drawable.zombimega);
         drawableZombie4 = context.getResources().getDrawable(R.drawable.zombienazi);
+
+
+        SharedPreferences pref = context.getSharedPreferences("org.jumpingshooter.juegos.feralva.jumpingshooter_preferences", Context.MODE_PRIVATE);
+        if (pref.getString("dificultad", "0").equals("0")) { //para dificultad facil
+            valor = 0;
+
+        }
+        if (pref.getString("dificultad", "1").equals("1")) { //para dificultad medio
+            valor = 1;
+        }
+        if (pref.getString("dificultad", "2").equals("2")) { //para dificultad dificil
+            valor = 3;
+
+        }
+
+
+
+
+
+
+
+
+
         monigote = new Grafico(this, drawableMonigote);
         misil = new Grafico(this, drawableMisil);
         Rocas = new Vector<Grafico>(8);
@@ -47,27 +72,27 @@ public class VistaJuego extends View {
         for (int i = 0; i < 8; i++) {
             if (i <= 3) {
                 Grafico roca = new Grafico(this, drawableRoca);
-                roca.setIncX(-0.8 * roca.MAX_VELOCIDAD);
+                roca.setIncX(-0.8 * roca.MAX_VELOCIDAD - (10*valor));
                 Rocas.add(roca);
             }
             if (i == 4) {
                 Grafico zombie = new Grafico(this, drawableZombie);
-                zombie.setIncX(-0.8 * zombie.MAX_VELOCIDAD);
+                zombie.setIncX(-0.8 * zombie.MAX_VELOCIDAD - (10*valor));
                 Rocas.add(zombie);
             }
             if (i == 5) {
                 Grafico zombie2 = new Grafico(this, drawableZombie2);
-                zombie2.setIncX(-0.8 * zombie2.MAX_VELOCIDAD);
+                zombie2.setIncX(-0.8 * zombie2.MAX_VELOCIDAD - (10*valor));
                 Rocas.add(zombie2);
             }
             if (i == 6) {
                 Grafico zombie3 = new Grafico(this, drawableZombie3);
-                zombie3.setIncX(-0.8 * zombie3.MAX_VELOCIDAD);
+                zombie3.setIncX(-0.8 * zombie3.MAX_VELOCIDAD - (10*valor));
                 Rocas.add(zombie3);
             }
             if (i == 7) {
                 Grafico zombie4 = new Grafico(this, drawableZombie4);
-                zombie4.setIncX(-0.8 * zombie4.MAX_VELOCIDAD);
+                zombie4.setIncX(-0.8 * zombie4.MAX_VELOCIDAD - (10*valor));
                 Rocas.add(zombie4);
             }
 
@@ -274,7 +299,7 @@ public class VistaJuego extends View {
 
     // metodo saltar activa la condición de salto y la velocidad del monigote para ir hacia arriba
     private void saltar() {
-        monigote.setIncY(-40);
+        monigote.setIncY(-40 - (valor*10));
         salto = true;
     }
 
@@ -283,7 +308,7 @@ public class VistaJuego extends View {
     * de la posición máxima
     */
     private void descenso() {
-        monigote.setIncY(15);
+        monigote.setIncY(15 + (valor*10));
         monigote.setPosY(getHeight() - (monigote.getAlto() * 2.7) - 1);
         salto = true;
     }
