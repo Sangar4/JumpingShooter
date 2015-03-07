@@ -1,5 +1,6 @@
 package org.jumpingshooter.juegos.feralva.jumpingshooter;
 
+import android.media.MediaPlayer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -19,6 +20,9 @@ public class VistaJuego extends View {
     // variable booleana que permite saber si el monigote está saltando
     private boolean salto = false;
     private boolean misilActivo = false;
+    //Variables que he añadido para la dificultad y para la reproduccion de la musica
+    private MediaPlayer mp;
+
     private int valor = 3;
     // Thread encargado de procesar el juego
     private ThreadJuego thread = new ThreadJuego();
@@ -52,10 +56,27 @@ public class VistaJuego extends View {
         if (pref.getString("dificultad", "1").equals("1")) { //para dificultad medio
             valor = 1;
         }
+
         if (pref.getString("dificultad", "2").equals("2")) { //para dificultad dificil
             valor = 3;
 
         }
+
+
+        if( pref.getBoolean("musica", Boolean.TRUE) )
+        {
+
+            mp = MediaPlayer.create(context, R.raw.musica);
+            mp.start();
+        }
+        if( pref.getBoolean("musica", Boolean.FALSE) )
+        {
+
+            mp.stop();
+        }
+
+
+
 
 
 
