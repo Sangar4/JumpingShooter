@@ -9,8 +9,10 @@ import android.os.Bundle;
     public class Juego extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
+            VistaJuego.setPadre(this);
             super.onCreate(savedInstanceState);
             setContentView(R.layout.juego);
+
         }
 
     }

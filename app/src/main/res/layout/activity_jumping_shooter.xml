@@ -62,6 +62,7 @@
             android:textSize="20sp"
             android:textColor="#ff000000"
             android:text="@string/puntuaciones"
+            android:onClick="lanzarPuntuaciones"
             android:id="@+id/buttonpuntuaciones"
             android:layout_gravity="center_vertical" />
         </TableRow>

@@ -35,7 +35,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             />
-
+        <activity
+            android:name=".Puntuaciones"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            />
     </application>
 
 </manifest>

@@ -11,7 +11,7 @@ import android.view.View;
 
 
 public class JumpingShooter extends ActionBarActivity {
-
+   public static AlmacenPuntuaciones almacen = new AlmacenPuntuacionesArray();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -23,7 +23,18 @@ public class JumpingShooter extends ActionBarActivity {
     }
     public void lanzarJuego(View view) {
         Intent i = new Intent(this, Juego.class);
-        startActivity(i);
+        startActivityForResult(i,1234);
+    }
+    @Override protected void onActivityResult(int requestCode,int resultCode, Intent data){
+
+        super.onActivityResult(requestCode , resultCode , data );
+            if(requestCode==1234 && resultCode==RESULT_OK && data!=null){
+                double puntuacion = data.getExtras().getDouble("puntuacion");
+                String nombre= "Jugador 1";
+                //Mejor leerlo desde un AlertDialog.Builder
+                almacen.guardarPuntuacion(puntuacion , nombre);
+                lanzarPuntuaciones(null);
+            }
     }
     public void lanzarAyuda(View view) {
         Intent i = new Intent(this, Ayuda.class);
@@ -35,6 +46,10 @@ public class JumpingShooter extends ActionBarActivity {
         startActivity(i);
     }
 
+    public void lanzarPuntuaciones(View view) {
+        Intent i = new Intent(this, Puntuaciones.class);
+        startActivity(i);
+    }
 
 
 

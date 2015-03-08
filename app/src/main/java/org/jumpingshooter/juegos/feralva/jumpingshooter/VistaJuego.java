@@ -1,17 +1,28 @@
 package org.jumpingshooter.juegos.feralva.jumpingshooter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
-
 import java.util.Vector;
+
+
+
 public class VistaJuego extends View {
+
+    //truco para generar la respuesta a las puntuaciones desde aquí en vistaJuego
+    private static Activity padre;
+    public static void setPadre (Activity padre1){
+        padre = padre1;
+    }
+
     ////// ROCA //////
     private Vector<Grafico> Rocas; // Vector con los Rocas del juego
     ////// MONIGOTE //////
@@ -35,6 +46,8 @@ public class VistaJuego extends View {
     //Distancia que define el espacio mínimo que debe de haber entre rocas
     private double distancia_minima;
 
+    /*Variable donde almacenaremos los puntos de cada partida*/
+    private double puntos=0;
 
     public VistaJuego(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -65,27 +78,14 @@ public class VistaJuego extends View {
 
         if( pref.getBoolean("musica", Boolean.TRUE) )
         {
-
             mp = MediaPlayer.create(context, R.raw.musica);
             mp.start();
         }
         if( pref.getBoolean("musica", Boolean.FALSE) )
         {
-
             mp.stop();
         }
-
-
-
-
-
-
-
-
-
-
-
-
+        puntos = 0.0;
         monigote = new Grafico(this, drawableMonigote);
         misil = new Grafico(this, drawableMisil);
         Rocas = new Vector<Grafico>(8);
@@ -175,6 +175,7 @@ public class VistaJuego extends View {
         if (ultimoProceso + PERIODO_PROCESO > ahora) {
             return;
         }
+        puntos = puntos + 0.05;
         // Para una ejecución en tiempo real calculamos retardo
         double retardo = (ahora - ultimoProceso) / PERIODO_PROCESO;
         ultimoProceso = ahora; // Para la próxima vez
@@ -204,7 +205,7 @@ public class VistaJuego extends View {
                     if (misil.verificaDisparo(Rocas.elementAt(i))) {
                         DesactivaRoca(i);
                         misilActivo = false;
-
+                        puntos=puntos+5;
                         break;
                     }
             }
@@ -352,7 +353,12 @@ public class VistaJuego extends View {
     }
 
     private void AcabaJuego() {
-        ((Juego) getContext()).finish();
-
+        Bundle bundle = new Bundle();
+        bundle.putDouble("puntuacion",puntos);
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        padre.setResult(Activity.RESULT_OK , intent);
+        //thread.stop();
+        padre.finish();
     }
 }
