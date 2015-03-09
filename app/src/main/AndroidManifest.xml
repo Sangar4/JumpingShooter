@@ -43,6 +43,7 @@
         <activity
             android:name=".NombreJugador"
             android:screenOrientation="portrait"
+            android:label="Nombre Jugador"
             android:theme="@style/Theme.AppCompat.Light.Dialog"
             />
     </application>

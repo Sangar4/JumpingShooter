@@ -24,5 +24,6 @@
         android:layout_height="wrap_content"
         android:text="@string/aceptar"
         android:id="@+id/button"
+        android:onClick="LeerTextoySalir"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

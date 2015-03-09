@@ -104,6 +104,7 @@ public class VistaJuego extends View {
                 Grafico zombie2 = new Grafico(this, drawableZombie2);
                 zombie2.setIncX(-0.8 * zombie2.MAX_VELOCIDAD - (valor));
                 Rocas.add(zombie2);
+
             }
             if (i == 6) {
                 Grafico zombie3 = new Grafico(this, drawableZombie3);

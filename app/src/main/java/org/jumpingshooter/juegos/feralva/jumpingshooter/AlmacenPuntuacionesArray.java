@@ -8,15 +8,15 @@ import java.util.Vector;
 public class AlmacenPuntuacionesArray implements AlmacenPuntuaciones {
     private Vector<String> puntuaciones;
 
-   public AlmacenPuntuacionesArray(){
+    public AlmacenPuntuacionesArray(){
         puntuaciones = new Vector<String>();
     }
     @Override
-    public void guardarPuntuacion(double puntos,String nombre ){
+    public void guardarPuntuacion(int puntos,String nombre ){
         puntuaciones.add( nombre + ": " + puntos  );
     }
     @Override
     public Vector<String> listaPuntuaciones(int Cantdad){
-      return puntuaciones;
+        return puntuaciones;
     }
 }

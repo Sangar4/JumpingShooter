@@ -12,6 +12,8 @@ import android.view.View;
 
 
 public class JumpingShooter extends ActionBarActivity {
+    double puntuacion=0;
+   
     private MediaPlayer mp;
    public static AlmacenPuntuaciones almacen = new AlmacenPuntuacionesArray();
     @Override
@@ -23,24 +25,35 @@ public class JumpingShooter extends ActionBarActivity {
         //faltaria conicion para iniciar
 
     }
+
     public void lanzarJuego(View view) {
         Intent i = new Intent(this, Juego.class);
-        startActivityForResult(i,1234);
-
-
+        startActivityForResult(i, 1234);
     }
     @Override protected void onActivityResult(int requestCode,int resultCode, Intent data){
 
-        super.onActivityResult(requestCode , resultCode , data );
-            if(requestCode==1234 && resultCode==RESULT_OK && data!=null){
-                double puntuacion = data.getExtras().getDouble("puntuacion");
-                lanzarNombreJugador(null);
-                String nombre= "Jugador 1";
-                //Mejor leerlo desde un AlertDialog.Builder
-                almacen.guardarPuntuacion(puntuacion , nombre);
-                lanzarPuntuaciones(null);
-            }
+    
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1234 && resultCode == RESULT_OK && data != null) {
+
+            puntuacion = data.getExtras().getDouble("puntuacion");
+            lanzarNombreJugador(null);
+
+            //Mejor leerlo desde un AlertDialog.Builder
+
+        }
+        if (requestCode == 1233 && resultCode == RESULT_OK && data != null) {
+
+             String nombre = data.getExtras().getString("nombre") ;
+            //Mejor leerlo desde un AlertDialog.Builder
+            int d = (int) Math.ceil(puntuacion);
+            almacen.guardarPuntuacion(d, nombre);
+            lanzarPuntuaciones(null);
+
+        }
     }
+
     public void lanzarAyuda(View view) {
         Intent i = new Intent(this, Ayuda.class);
         startActivity(i);
@@ -55,12 +68,14 @@ public class JumpingShooter extends ActionBarActivity {
         Intent i = new Intent(this, Puntuaciones.class);
         startActivity(i);
     }
+
     public void lanzarNombreJugador(View view) {
         Intent i = new Intent(this, NombreJugador.class);
-        startActivity(i);
+        startActivityForResult(i, 1233);
+
     }
 
 
-
-
 }
+
+
