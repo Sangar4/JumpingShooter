@@ -40,6 +40,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             />
+        <activity
+            android:name=".NombreJugador"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"
+            />
     </application>
 
 </manifest>

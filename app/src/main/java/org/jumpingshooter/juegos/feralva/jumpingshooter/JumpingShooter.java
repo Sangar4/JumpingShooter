@@ -30,6 +30,7 @@ public class JumpingShooter extends ActionBarActivity {
         super.onActivityResult(requestCode , resultCode , data );
             if(requestCode==1234 && resultCode==RESULT_OK && data!=null){
                 double puntuacion = data.getExtras().getDouble("puntuacion");
+                lanzarNombreJugador(null);
                 String nombre= "Jugador 1";
                 //Mejor leerlo desde un AlertDialog.Builder
                 almacen.guardarPuntuacion(puntuacion , nombre);
@@ -50,7 +51,10 @@ public class JumpingShooter extends ActionBarActivity {
         Intent i = new Intent(this, Puntuaciones.class);
         startActivity(i);
     }
-
+    public void lanzarNombreJugador(View view) {
+        Intent i = new Intent(this, NombreJugador.class);
+        startActivity(i);
+    }
 
 
 

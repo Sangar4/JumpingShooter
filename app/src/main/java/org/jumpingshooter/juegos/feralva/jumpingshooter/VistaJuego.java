@@ -18,9 +18,9 @@ import java.util.Vector;
 public class VistaJuego extends View {
 
     //truco para generar la respuesta a las puntuaciones desde aquí en vistaJuego
-    private static Activity padre;
-    public static void setPadre (Activity padre1){
-        padre = padre1;
+    private  Activity padre;
+    public  void setPadre (Activity padre){
+        this.padre = padre;
     }
 
     ////// ROCA //////
@@ -67,11 +67,11 @@ public class VistaJuego extends View {
 
         }
         if (pref.getString("dificultad", "1").equals("1")) { //para dificultad medio
-            valor = 1;
+            valor = 5;
         }
 
         if (pref.getString("dificultad", "2").equals("2")) { //para dificultad dificil
-            valor = 3;
+            valor = 10;
 
         }
 
@@ -93,27 +93,27 @@ public class VistaJuego extends View {
         for (int i = 0; i < 8; i++) {
             if (i <= 3) {
                 Grafico roca = new Grafico(this, drawableRoca);
-                roca.setIncX(-0.8 * roca.MAX_VELOCIDAD - (10*valor));
+                roca.setIncX(-0.8 * roca.MAX_VELOCIDAD - (valor));
                 Rocas.add(roca);
             }
             if (i == 4) {
                 Grafico zombie = new Grafico(this, drawableZombie);
-                zombie.setIncX(-0.8 * zombie.MAX_VELOCIDAD - (10*valor));
+                zombie.setIncX(-0.8 * zombie.MAX_VELOCIDAD - (valor));
                 Rocas.add(zombie);
             }
             if (i == 5) {
                 Grafico zombie2 = new Grafico(this, drawableZombie2);
-                zombie2.setIncX(-0.8 * zombie2.MAX_VELOCIDAD - (10*valor));
+                zombie2.setIncX(-0.8 * zombie2.MAX_VELOCIDAD - (valor));
                 Rocas.add(zombie2);
             }
             if (i == 6) {
                 Grafico zombie3 = new Grafico(this, drawableZombie3);
-                zombie3.setIncX(-0.8 * zombie3.MAX_VELOCIDAD - (10*valor));
+                zombie3.setIncX(-0.8 * zombie3.MAX_VELOCIDAD - (valor));
                 Rocas.add(zombie3);
             }
             if (i == 7) {
                 Grafico zombie4 = new Grafico(this, drawableZombie4);
-                zombie4.setIncX(-0.8 * zombie4.MAX_VELOCIDAD - (10*valor));
+                zombie4.setIncX(-0.8 * zombie4.MAX_VELOCIDAD - (valor));
                 Rocas.add(zombie4);
             }
 
@@ -302,10 +302,38 @@ public class VistaJuego extends View {
     }
 
     class ThreadJuego extends Thread {
+        private boolean pausa;
+        private boolean corriendo;
+        public synchronized void pausar(){
+            pausa=true;
+        }
+        public synchronized void reanudar(){
+            pausa=false;
+            notify();
+
+        }
+
+        public void detener(){
+            corriendo=false;
+            if(pausa){
+                reanudar();
+            }
+        }
         @Override
         public void run() {
-            while (true) {
+            corriendo = true;
+            while (corriendo) {
                 actualizaFisica();
+                synchronized (this){
+                    while(pausa){
+                        try{
+                            wait();
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                }
             }
         }
     }
@@ -321,7 +349,7 @@ public class VistaJuego extends View {
 
     // metodo saltar activa la condición de salto y la velocidad del monigote para ir hacia arriba
     private void saltar() {
-        monigote.setIncY(-40 - (valor*10));
+        monigote.setIncY(-40 );
         salto = true;
     }
 
@@ -330,7 +358,7 @@ public class VistaJuego extends View {
     * de la posición máxima
     */
     private void descenso() {
-        monigote.setIncY(15 + (valor*10));
+        monigote.setIncY(15+valor );
         monigote.setPosY(getHeight() - (monigote.getAlto() * 2.7) - 1);
         salto = true;
     }
@@ -355,10 +383,15 @@ public class VistaJuego extends View {
     private void AcabaJuego() {
         Bundle bundle = new Bundle();
         bundle.putDouble("puntuacion",puntos);
+        puntos = 0;
         Intent intent = new Intent();
         intent.putExtras(bundle);
         padre.setResult(Activity.RESULT_OK , intent);
         //thread.stop();
         padre.finish();
+    }
+
+    public ThreadJuego getThread() {
+        return thread;
     }
 }

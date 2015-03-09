@@ -7,5 +7,7 @@
     <string name="ayuda">Ayuda</string>
     <string name="configuracion">Configuracion</string>
     <string name="action_settings">Settings</string>
+    <string name="nombreJugador">Nombre del jugador:</string>
+    <string name="aceptar">Aceptar</string>
 
 </resources>
