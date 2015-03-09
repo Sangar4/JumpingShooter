@@ -75,16 +75,15 @@ public class VistaJuego extends View {
 
         }
 
+        mp = MediaPlayer.create(context, R.raw.musica);
 
-        if( pref.getBoolean("musica", Boolean.TRUE) )
+        if( pref.getBoolean("musica", true) == true )
         {
-            mp = MediaPlayer.create(context, R.raw.musica);
             mp.start();
         }
-        if( pref.getBoolean("musica", Boolean.FALSE) )
-        {
-            mp.stop();
-        }
+
+
+
         puntos = 0.0;
         monigote = new Grafico(this, drawableMonigote);
         misil = new Grafico(this, drawableMisil);
@@ -381,6 +380,8 @@ public class VistaJuego extends View {
     }
 
     private void AcabaJuego() {
+        mp.pause();
+
         Bundle bundle = new Bundle();
         bundle.putDouble("puntuacion",puntos);
         puntos = 0;
